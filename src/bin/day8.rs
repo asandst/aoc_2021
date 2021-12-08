@@ -1,5 +1,7 @@
 extern crate itertools;
+extern crate rayon;
 use itertools::iproduct;
+use rayon::prelude::*;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
@@ -65,6 +67,7 @@ fn main() {
             }
         }
         part2 += res.parse::<i32>().unwrap();
+        println!("Res {:?}", res);
     }
 
     println!("Part2 {:?}", part2);
@@ -110,7 +113,7 @@ impl<'a> Solver<'a> {
             .collect::<Vec<_>>();
 
         let left = iproduct!(from_chars_left.iter(), to_chars_left.iter()).collect::<Vec<_>>();
-        left.iter()
+        left.par_iter()
             .map(|&(a, i)| {
                 let mut new_solution = solution.clone();
                 new_solution.insert(a.clone(), i.clone());
@@ -121,7 +124,7 @@ impl<'a> Solver<'a> {
                     Result::Fail => None,
                 }
             })
-            .find(Option::is_some)
+            .find_any(Option::is_some)
             .map(Option::unwrap)
     }
 

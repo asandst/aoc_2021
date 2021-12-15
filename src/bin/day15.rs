@@ -39,14 +39,14 @@ fn main() {
 fn dijsktra(input: &Vec<Vec<u32>>) -> u32 {
     let mut distances = vec![vec![u32::MAX; input[0].len()]; input.len()];
     distances[0][0] = 0;
-    let mut heap: Vec<QNode> = Vec::new();
+    let mut q: Vec<QNode> = Vec::new();
     for (i, row) in distances.iter().enumerate() {
         for (j, _) in row.iter().enumerate() {
-            heap.push(QNode { x: i, y: j });
+            q.push(QNode { x: i, y: j });
         }
     }
-    heap.sort_by(|a, b| distances[b.x][b.y].cmp(&distances[a.x][a.y]));
-    while let Some(v) = heap.pop() {
+    q.sort_by(|a, b| distances[b.x][b.y].cmp(&distances[a.x][a.y]));
+    while let Some(v) = q.pop() {
         if v.x > 0 {
             let l = distances[v.x][v.y] + input[v.x - 1][v.y];
             if l < distances[v.x - 1][v.y] {
@@ -74,7 +74,7 @@ fn dijsktra(input: &Vec<Vec<u32>>) -> u32 {
                 distances[v.x][v.y + 1] = l;
             }
         }
-        heap.sort_by(|a, b| distances[b.x][b.y].cmp(&distances[a.x][a.y]));
+        q.sort_by(|a, b| distances[b.x][b.y].cmp(&distances[a.x][a.y]));
     }
 
     distances[input.len() - 1][input[0].len() - 1]
